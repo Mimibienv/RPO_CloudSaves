@@ -1,0 +1,24 @@
+local BadgeService = game:GetService("BadgeService")
+local BadgeIDsTable = require(game:GetService("ReplicatedStorage").BadgeIDsTable)
+
+
+local BadgeIDs = BadgeIDsTable["BadgeIDs"]
+
+--[[ local BadgeIDs = {
+	["Maybe the First One"] = 2124954829;
+	["Inferno Rocks"] = 2124975085;
+	["Cold Mines"] = 2124976019;
+	["Stretch of Bright Void"] = 2124983560
+} ]]
+
+for i, v in pairs(BadgeIDs) do
+	if BadgeService:UserHasBadgeAsync(game:GetService("Players").LocalPlayer.UserId, v) then
+		if script.SignInstances:FindFirstChild(tostring(i)) and script.SignInstances[tostring(i)].Value then
+			script.SignInstances[tostring(i)].Value.TextColor3 = Color3.fromRGB(0, 200, 0)
+		end
+	end
+end
+
+
+
+-- BadgeService:UserHasBadgeAsync(Player.UserId, BadgeId)
