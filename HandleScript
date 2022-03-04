@@ -1,0 +1,209 @@
+print("=========================================================================")
+print("= If there are any errors below, thanks for reporting them to the devs. =")
+print("=========================================================================")
+
+script.Parent.LoadingBackground.Visible = true
+--//TIPS
+
+local tips = {
+	"Don't play with your feets";
+	"Breaking your keyboard doesn't make you better";
+	"The legend says: Liking the game will make you lucky for the next 5 years";
+	"Lag = hard gameplay";
+	"Stepping on legos is pain";
+	"If someone is flying, it's probably a hacker";
+	"Cheating isn't fair";
+	"This is a game, not an  e x p e r i e n c e";
+	"The world select has some easter eggs";
+	"Playing with the roblox default package will make your gameplay easier";
+	"The roblox physic is aaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+	"If a bacon hair tells you to go on a website to get free robuks, it's probably a scammer";
+	"Don't break your device";
+	"This is a loading message";
+	"If someone is scamming you, it's probably it is a scammer";
+	"uwu";
+	"don't eat a happy meal at 3am";
+	"This message was written in 2021";
+	"This message was written in 2022";
+	"h"
+}
+
+script.Parent.LoadingBackground.TIP.Text = tips[math.random(1, #tips)]
+
+--// Loading
+
+local cp = game:GetService("ContentProvider")
+total = game.Workspace:GetDescendants()
+local t = #total
+for i, v in pairs(total) do
+	cp:PreloadAsync({v})
+end
+for _, v in pairs(game.Workspace.Cameras:GetChildren()) do
+	v.Transparency = 1
+end
+
+--// Script
+
+local current = 1
+local TeleportService = game:GetService("TeleportService")
+local TweenService = game:GetService("TweenService")
+local camera = workspace.CurrentCamera
+local nextButton = script.Parent.NextButton
+local previousButton = script.Parent.PreviousButton
+local cameraFolder = workspace.Cameras
+local enterButton = script.Parent.EnterButton
+local infoText = script.Parent.InfoFrame.InfoText
+local Difficulties = script.Parent.Difficilties
+local maxTilt = 10
+local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+local canmovecam = true
+
+
+
+local WorldIdTable = {
+	[1] = 7165625259
+}
+
+local WorldInfoTable = {
+	[1] = "Requirements:<br/>Internet, Keyboard, mouse, computer or IPad.<br/><br/>There are 5 Obbies in this world.<br/><br/>Desc: Welcome to a new adventure ! This is the beginning/the first world. You can beat it, or fail it. It is sad to know you can't continue if you fail here...";
+	[2] = "WIP<br/>xd"	
+}
+
+local BeginnerDifficulties = {
+	[1] = Color3.fromRGB(255, 255, 0);
+	[2] = Color3.fromRGB(0, 0, 0)
+}
+
+local IntermediateDifficulties = {
+	[1] = Color3.fromRGB(255, 113, 0);
+	[2] = Color3.fromRGB(0, 0, 0)
+}
+
+local AdvancedDifficulties = {
+	[1] = Color3.fromRGB(255, 0, 0);
+	[2] = Color3.fromRGB(0, 0, 0)
+}
+
+local PsychoUnsafeDifficulty = {
+	[1] = Color3.fromRGB(255, 0, 255);
+	[2] = Color3.fromRGB(0, 0, 0)
+}
+
+
+repeat wait() camera.CameraType = Enum.CameraType.Scriptable until camera.CameraType == Enum.CameraType.Scriptable
+
+camera.CFrame = cameraFolder:WaitForChild("1").CFrame
+camPart = cameraFolder:WaitForChild("1").CFrame
+
+local function MoveCamera()
+	canmovecam = false
+	--[[ spawn(function()
+		wait(2.2)
+		canmovecam = true
+	end) ]]
+	local t = TweenService:Create(camera, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = cameraFolder:WaitForChild(tostring(current)).CFrame})
+	t:Play()
+	camPart = cameraFolder:WaitForChild(tostring(current)).CFrame
+	spawn(function()
+		t.Completed:Connect(function()
+			wait()
+			canmovecam = true
+		end)
+	end)
+end
+
+local function FixButton()
+	if tonumber(current) then
+		local nnum = current + 1
+		local pnum = current - 1
+		--==NEXT NUMBER CHECK
+		if cameraFolder:FindFirstChild(tostring(nnum)) then
+			nextButton.Visible = true
+		else
+			nextButton.Visible = false
+		end
+		--== PREV NUMBER CHECK
+		if cameraFolder:FindFirstChild(tostring(pnum)) then
+			previousButton.Visible = true
+		else
+			previousButton.Visible = false
+		end
+	end
+end
+
+local function ApplyInformation()
+	local info = WorldInfoTable[current]
+	infoText.Text = info
+end
+
+local function setDifficulties()
+	local Beginner = BeginnerDifficulties[current]
+	Difficulties["1"].BackgroundColor3 = Beginner
+	
+	local Intermediate = IntermediateDifficulties[current]
+	Difficulties["2"].BackgroundColor3 = Intermediate
+	
+	local Advanced = AdvancedDifficulties[current]
+	Difficulties["3"].BackgroundColor3 = Advanced
+	
+	local PsychoUnsafe = PsychoUnsafeDifficulty[current]
+	Difficulties["4"].BackgroundColor3 = PsychoUnsafe
+end
+
+FixButton()
+ApplyInformation()
+setDifficulties()
+
+for i = 0, 1.5, 0.02 do
+	script.Parent.LoadingBackground.BackgroundTransparency = i
+	script.Parent.LoadingBackground.LoadingText.TextTransparency = i
+	script.Parent.LoadingBackground.TIP.TextTransparency = i
+	wait(0.01)
+end
+
+script.Parent.LoadingBackground.Visible = false
+
+
+nextButton.MouseButton1Click:Connect(function()
+	local nextnum = current + 1
+	if cameraFolder:FindFirstChild(tostring(nextnum)) then
+		nextButton.Visible = true
+		current = nextnum
+		MoveCamera()
+		FixButton()
+		ApplyInformation()
+		setDifficulties()
+		script.Parent.Button:Play()
+	end
+end)
+
+previousButton.MouseButton1Click:Connect(function()
+	local prevnum = current - 1
+	if cameraFolder:FindFirstChild(tostring(prevnum)) then
+		previousButton.Visible = true
+		current = prevnum
+		MoveCamera()
+		FixButton()
+		ApplyInformation()
+		setDifficulties()
+		script.Parent.Button:Play()
+	end
+end)
+
+enterButton.MouseButton1Click:Connect(function()
+	local PlaceId = WorldIdTable[current]
+	if PlaceId then
+		TeleportService:Teleport(PlaceId)
+		script.Parent.Button:Play()
+	end
+end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+	if canmovecam == true then
+	camera.CFrame = camPart * CFrame.Angles(
+		math.rad((((mouse.Y - mouse.ViewSizeY / 2) / mouse.ViewSizeY)) * -maxTilt),
+		math.rad((((mouse.X - mouse.ViewSizeX / 2) / mouse.ViewSizeX)) * -maxTilt),
+		0
+		)
+	end
+end)
