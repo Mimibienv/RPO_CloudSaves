@@ -1,0 +1,23 @@
+wait()
+local PressedValues = {}
+local char
+local humanoid
+for i, v in pairs(game:GetDescendants()) do
+	if v.Name == "BtnActivator" and v:FindFirstChild("Press") and v.Parent and v.Parent:FindFirstChild("Part") and v.Parent:FindFirstChild("Timer") and v.Parent:FindFirstChild("Pressed") and v.Parent:FindFirstChild("Invert") and v:IsA("BasePart") then
+		local pressed = v.Parent.Pressed
+		table.insert(PressedValues, pressed)
+	end
+end
+
+local player = game:GetService("Players").LocalPlayer
+
+
+player.CharacterAdded:Connect(function(c)
+	char = c
+	humanoid = char:WaitForChild("Humanoid")
+	--humanoid.died:Connect(function()
+		for _, v in pairs(PressedValues) do
+			v.Value = false
+		end
+	--end)
+end)
