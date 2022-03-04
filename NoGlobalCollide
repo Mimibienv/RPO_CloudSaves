@@ -1,0 +1,55 @@
+local nocollideparts = {}
+
+for i, v in pairs(game:GetDescendants()) do
+	if v:IsA("BasePart") and v:FindFirstChild("NoGlobalCollide") then
+		table.insert(nocollideparts, v)
+	end
+end
+
+local everyplayers = game.Players:GetChildren()
+for e = 1, #everyplayers do
+	local player = everyplayers[e]
+	if player ~= game.Players.LocalPlayer then
+		--local player = game.Players.LocalPlayer
+		if player.Character then
+			--print(player.Name)
+			wait()
+			local char = player.Character
+			local parts = char:GetDescendants()
+			--print(player.Character.Name)
+			for i = 1, #parts do
+				if parts[i]:IsA("BasePart") then
+					--print(parts[i].Name)
+					for _, v in pairs(nocollideparts) do
+						local nocollide = Instance.new("NoCollisionConstraint", parts[i])
+						nocollide.Part0 = parts[i]
+						nocollide.Part1 = v
+					end
+				end
+			end
+		end
+	end
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+	if player ~= game.Players.LocalPlayer then
+		--local player = game.Players.LocalPlayer
+		player.CharacterAdded:Connect(function()
+		--print(player.Name)
+		wait()
+		local char = player.Character
+		local parts = char:GetDescendants()
+		--print(player.Character.Name)
+			for i = 1, #parts do
+				if parts[i]:IsA("BasePart") then
+					--print(parts[i].Name)
+					for _, v in pairs(nocollideparts) do
+						local nocollide = Instance.new("NoCollisionConstraint", parts[i])
+						nocollide.Part0 = parts[i]
+						nocollide.Part1 = v
+					end
+				end
+			end
+		end)
+	end
+end)
